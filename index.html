@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vale o Click · A gente acha a promoção pra você</title>
+<meta name="description" content="Não perca tempo procurando promoção. Ofertas do Mercado Livre e da Shopee garimpadas o dia todo, com preço e desconto conferidos, tudo em um só lugar.">
+<meta name="theme-color" content="#0a0c09">
+<meta property="og:title" content="Vale o Click · A gente acha a promoção pra você">
+<meta property="og:description" content="Ofertas do Mercado Livre e da Shopee garimpadas o dia todo, tudo em um só lugar.">
+<meta property="og:image" content="https://valeoclick.guiborestprod01.workers.dev/icon.png">
+<link rel="icon" href="https://valeoclick.guiborestprod01.workers.dev/icon.png">
+<link rel="apple-touch-icon" href="https://valeoclick.guiborestprod01.workers.dev/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#0a0c09;--panel:#13160f;--line:#252a1e;--fg:#eef3e8;--muted:#9aa58f;--neon:#39ff14;--ink:#0a0c09;--shp:#ff6a3d;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15px;line-height:1.4;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 16px 40px}
+header{display:flex;align-items:center;gap:10px;padding:4px 0 10px}
+.mark{width:40px;height:40px;border-radius:50%;background:var(--neon);display:grid;place-items:center;flex:none}
+.brand{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:20px}
+.hero{padding:14px 0 18px}
+.hero h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:clamp(28px,6.5vw,46px);line-height:1.02;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--neon)}
+.tgcta{display:inline-block;margin-top:14px;padding:11px 16px;border-radius:999px;background:var(--neon);color:#0a0c09;font-weight:700;text-decoration:none;font-size:15px}
+.hero p{color:var(--muted);margin:10px 0 0;font-size:15px;max-width:560px}
+.stats{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--muted)}
+.stats b{color:var(--fg);font-variant-numeric:tabular-nums}
+.search{width:100%;font:inherit;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.search:focus-visible,a:focus-visible,button:focus-visible,select:focus-visible{outline:2px solid var(--neon);outline-offset:2px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;font:inherit;font-size:13.5px;font-weight:600;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:99px;padding:8px 14px;cursor:pointer;min-height:38px}
+.chip[aria-pressed="true"]{background:var(--neon);color:var(--ink);border-color:var(--neon)}
+.filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 14px}
+.filters select{width:100%;font:inherit;font-size:13.5px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:9px 10px;min-height:40px}
+h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:19px;margin:18px 0 10px}
+.top{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.top::-webkit-scrollbar{display:none}
+.top .card{flex:none;width:44%;max-width:210px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(min-width:640px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.top .card{width:30%}}
+@media(min-width:900px){.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.top .card{width:22%}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;color:inherit;text-decoration:none;min-width:0}
+.ph{position:relative;aspect-ratio:1;background:#fff}
+.ph img{width:100%;height:100%;object-fit:contain;display:block}
+.n{position:absolute;top:8px;left:8px;background:var(--ink);color:var(--neon);font-weight:700;font-size:12px;padding:3px 8px;border-radius:99px}
+.off{position:absolute;top:8px;right:8px;background:var(--neon);color:var(--ink);font-weight:800;font-size:13px;padding:3px 8px;border-radius:99px}
+.loja{position:absolute;bottom:8px;left:8px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:#fff200;color:#2d3277}
+.loja.shp{background:var(--shp);color:#fff}
+.body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+.t{font-size:13.5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:2.8em}
+.price{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:22px;line-height:1;font-variant-numeric:tabular-nums}
+.old{color:var(--muted);font-size:12.5px;text-decoration:line-through}
+.meta{color:var(--muted);font-size:12px}
+.ship{color:var(--neon);font-size:12px;font-weight:600}
+.btn{margin-top:auto;background:var(--neon);color:var(--ink);text-align:center;font-weight:700;border-radius:10px;padding:10px 8px;font-size:14px}
+.empty,.note{color:var(--muted);font-size:13px;text-align:center;padding:18px 8px}
+.skel{aspect-ratio:.62;border-radius:16px;background:linear-gradient(90deg,var(--panel),#1b1f16,var(--panel));background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.skel{animation:none}}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:28px}
+.how div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13px;color:var(--muted)}
+.how b{display:block;color:var(--fg);font-size:14px;margin-bottom:4px}
+@media(max-width:560px){.how{grid-template-columns:1fr}}
+footer{margin-top:22px;color:var(--muted);font-size:12px;text-align:center;line-height:1.6}
+footer a{color:var(--neon)}
+[hidden]{display:none!important}
+</style>
+</head><body>
+<div class="wrap">
+  <header>
+    <div class="mark" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 40 40"><path d="M7 20 15 11h17a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H15z" fill="#0a0c09"/><circle cx="16.5" cy="20" r="2.2" fill="#39ff14"/><path d="M22 14v11l2.7-2.6 2 4.4 1.9-.8-2-4.3h3.7z" fill="#39ff14"/></svg></div>
+    <div class="brand">Vale o Click</div>
+  </header>
+
+  <section class="hero">
+    <h1>Não perca tempo procurando promoção. <em>A gente acha pra você.</em></h1>
+    <p>Garimpamos o dia todo os achados com desconto de verdade no Mercado Livre e na Shopee, e juntamos tudo aqui, em um só lugar.</p>
+    <div class="stats" id="stats" hidden></div>
+    <a class="tgcta" href="https://t.me/valeoclickofertas" rel="noopener">📲 Receba as ofertas no Telegram, na hora que aparecem</a>
+  </section>
+
+  <input id="q" class="search" type="search" inputmode="search" placeholder="Buscar produto ou nº do post" aria-label="Buscar produto ou número do post">
+  <div class="chips" id="cats" role="group" aria-label="Categorias"></div>
+  <div class="filters">
+    <select id="fLoja" aria-label="Loja"><option value="">Lojas</option><option value="ml">Merc. Livre</option><option value="shopee">Shopee</option></select>
+    <select id="fPreco" aria-label="Preço"><option value="">Preço</option><option value="30">Até R$ 30</option><option value="50">Até R$ 50</option><option value="100">Até R$ 100</option></select>
+    <select id="fOrdem" aria-label="Ordenar"><option value="novo">Recentes</option><option value="desc">Desconto</option><option value="barato">Mais barato</option><option value="clicadas">Clicadas</option></select>
+  </div>
+
+  <section id="topSec" hidden>
+    <h2>🔥 Mais clicadas da semana</h2>
+    <div class="top" id="top"></div>
+  </section>
+
+  <h2 id="gridTitle">Ofertas de hoje</h2>
+  <div id="grid" class="grid" aria-live="polite">
+    <div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>
+  </div>
+  <div id="note" class="note" hidden></div>
+
+  <div class="how">
+    <div><b>1. A gente garimpa</b>Todo dia o sistema varre os mais vendidos e só fica com desconto real.</div>
+    <div><b>2. Confere o preço</b>Cada oferta mostra quando o preço foi conferido.</div>
+    <div><b>3. Você só escolhe</b>Toca na oferta e compra direto na loja, com a garantia dela.</div>
+  </div>
+
+  <footer>
+    #publi · Os links levam ao Mercado Livre ou à Shopee e são links de afiliado: podemos ganhar uma comissão, sem custo extra para você.<br>
+    Preços e estoque podem mudar a qualquer momento; confira na loja antes de comprar.<br>
+    <a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram @valeoclickbr.ofertas</a> · <a href="https://x.com/ValeoClickBR" rel="noopener">X @ValeoClickBR</a> · <a href="https://t.me/valeoclickofertas" rel="noopener">Telegram</a>
+  </footer>
+</div>
+<script>
+(() => {
+  const API = "https://pgxhfrkiitninpepppvb.supabase.co/rest/v1/rpc/voc_vitrine";
+  const KEY = "sb_publishable_YYoQ3i_jjgpUyfz-vlfEYw_S16bBbDw";
+  const $ = id => document.getElementById(id);
+  const brl = v => Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const safeUrl = u => /^https:\/\/((www\.|produto\.)?mercadolivre\.com\.br|([a-z0-9-]+\.)?shopee\.com\.br|([a-z0-9-]+\.)?shp\.ee)\//.test(u || "") ? u : "#";
+  const safeImg = u => /^https:\/\/[a-z0-9.-]+\.(mlstatic\.com|susercontent\.com|shopee\.com\.br)\//.test(u || "") ? u : "";
+  const hhmm = iso => new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Cuiaba" });
+  const quando = iso => {
+    const d = new Date(iso), hoje = new Date();
+    const f = x => x.toLocaleDateString("pt-BR", { timeZone: "America/Cuiaba" });
+    return (f(d) === f(hoje) ? "hoje" : d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", timeZone: "America/Cuiaba" })) + " às " + hhmm(iso);
+  };
+  const GRUPOS = [
+    ["Casa", /casa|cozinha|organiza|decora|lavander|ilumina|cama|banho|móve/i],
+    ["Pet", /animai|pet/i],
+    ["Celular", /celular|telefon/i],
+    ["Games", /game|console/i],
+    ["Informática", /inform|pc|computa|notebook/i],
+    ["Eletrônicos", /eletrôn|áudio|vídeo|câmera|eletrodom/i],
+    ["Beleza", /beleza|cuidado pessoal|perfum/i],
+    ["Esporte", /esporte|fitness/i],
+    ["Bebê e brinquedos", /bebê|brinquedo/i],
+    ["Ferramentas", /ferrament|constru|veícul/i],
+  ];
+  const grupo = c => { for (const [g, re] of GRUPOS) if (re.test(c || "")) return g; return "Outros"; };
+  const off = i => i.preco_antes && i.preco_antes > i.preco ? Math.round((1 - i.preco / i.preco_antes) * 100) : 0;
+  const ehShp = i => i.loja === "shopee" || /shopee|shp\.ee/.test(i.link || "");
+
+  let items = [], cat = "";
+  try { const c = localStorage.getItem("voc_vitrine"); if (c) items = JSON.parse(c).itens || []; } catch (_) {}
+
+  const hit = (n, kind) => { try { fetch(API.replace("voc_vitrine", "voc_vitrine_hit"), { method: "POST", keepalive: true, headers: { "Content-Type": "application/json", apikey: KEY, Authorization: "Bearer " + KEY }, body: JSON.stringify({ p_n: n, p_kind: kind }) }); } catch (_) {} };
+
+  const card = i => {
+    const o = off(i), img = safeImg(i.foto), shp = ehShp(i);
+    return `<a class="card" data-n="${esc(i.n)}" href="${esc(safeUrl(i.link))}" rel="noopener sponsored" target="_blank">
+      <div class="ph">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ""}<span class="n">nº ${esc(i.n)}</span>${o >= 5 ? `<span class="off">-${o}%</span>` : ""}<span class="loja${shp ? " shp" : ""}">${shp ? "Shopee" : "Mercado Livre"}</span></div>
+      <div class="body">
+        <div class="t">${esc(i.titulo)}</div>
+        <div><div class="price">${brl(i.preco)}</div>${o >= 5 ? `<div class="old">${brl(i.preco_antes)}</div>` : ""}</div>
+        ${i.frete_gratis ? `<div class="ship">📦 Frete grátis</div>` : ""}
+        <div class="meta">Conferido ${esc(quando(i.publicado_em))}</div>
+        <span class="btn">Ver oferta</span>
+      </div></a>`;
+  };
+
+  function renderCats() {
+    const cont = {};
+    items.forEach(i => { const g = grupo(i.categoria); cont[g] = (cont[g] || 0) + 1; });
+    const lista = [["", "Todas", items.length], ...Object.entries(cont).sort((a, b) => b[1] - a[1]).map(([g, n]) => [g, g, n])];
+    $("cats").innerHTML = lista.map(([v, l, n]) => `<button class="chip" data-v="${esc(v)}" aria-pressed="${v === cat}">${esc(l)} <span style="opacity:.6">${n}</span></button>`).join("");
+    $("cats").querySelectorAll(".chip").forEach(b => b.onclick = () => { cat = b.dataset.v; renderCats(); render(); });
+  }
+
+  function render() {
+    const q = $("q").value.trim().toLowerCase().replace(/^n?º?\s*/, "");
+    const loja = $("fLoja").value, max = Number($("fPreco").value) || 0, ordem = $("fOrdem").value;
+    let list = items.filter(i =>
+      (!q || String(i.n) === q || String(i.titulo).toLowerCase().includes(q)) &&
+      (!cat || grupo(i.categoria) === cat) &&
+      (!loja || (loja === "shopee") === ehShp(i)) &&
+      (!max || Number(i.preco) <= max));
+    if (ordem === "desc") list.sort((a, b) => off(b) - off(a));
+    else if (ordem === "barato") list.sort((a, b) => a.preco - b.preco);
+    else if (ordem === "clicadas") list.sort((a, b) => (b.cliques || 0) - (a.cliques || 0));
+    $("gridTitle").textContent = cat ? `Ofertas · ${cat}` : "Ofertas de hoje";
+    $("grid").innerHTML = list.length ? list.map(card).join("") :
+      `<div class="empty" style="grid-column:1/-1">${items.length ? "Nada encontrado com esses filtros." : "Novas ofertas chegam ao longo do dia. Volte daqui a pouco!"}</div>`;
+
+    const top = [...items].filter(i => (i.cliques || 0) > 0).sort((a, b) => b.cliques - a.cliques).slice(0, 8);
+    $("topSec").hidden = !(top.length >= 3 && !q && !cat && !loja && !max);
+    if (!$("topSec").hidden) $("top").innerHTML = top.map(card).join("");
+
+    if (items.length) {
+      const maior = Math.max(0, ...items.map(off));
+      $("stats").hidden = false;
+      $("stats").innerHTML = `<span><b>${items.length}</b> ofertas no ar</span>${maior ? `<span>até <b>-${maior}%</b></span>` : ""}<span>atualizado <b>${esc(hhmm(new Date().toISOString()))}</b></span>`;
+    }
+  }
+
+  async function load() {
+    try {
+      const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json", apikey: KEY, Authorization: "Bearer " + KEY }, body: "{}" });
+      if (!r.ok) throw new Error(r.status);
+      const j = await r.json();
+      items = j.itens || [];
+      try { localStorage.setItem("voc_vitrine", JSON.stringify(j)); } catch (_) {}
+      $("note").hidden = true;
+    } catch (e) {
+      $("note").hidden = false;
+      $("note").textContent = items.length ? "Sem conexão agora: mostrando a última lista carregada." : "Não consegui carregar as ofertas. Tente de novo em instantes.";
+    }
+    renderCats(); render();
+  }
+
+  $("q").addEventListener("input", render);
+  ["fLoja", "fPreco", "fOrdem"].forEach(id => $(id).addEventListener("change", render));
+  document.addEventListener("click", ev => { const a = ev.target.closest && ev.target.closest("a.card"); if (a) hit(Number(a.dataset.n) || 0, "clique"); });
+  const h = location.hash.replace("#", ""); if (/^\d+$/.test(h)) $("q").value = h;
+  if (items.length) { renderCats(); render(); }
+  hit(0, "visita");
+  load();
+})();
+</script>
+</body></html>
