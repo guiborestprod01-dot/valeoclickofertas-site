@@ -67,6 +67,16 @@ h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-s
 @media(max-width:560px){.how{grid-template-columns:1fr}}
 footer{margin-top:22px;color:var(--muted);font-size:12px;text-align:center;line-height:1.6}
 footer a{color:var(--neon)}
+.dest{margin:4px 0 16px}
+.dest h2{margin:6px 0 4px}
+.dest .sub{color:var(--muted);font-size:13px;margin:0 0 10px}
+.dl{display:flex;flex-direction:column;gap:10px}
+.dc{display:grid;grid-template-columns:112px 1fr;gap:12px;background:var(--panel);border:1px solid var(--neon);border-radius:16px;padding:10px;color:inherit;text-decoration:none;align-items:center}
+.dc .ph{border-radius:12px;overflow:hidden}
+.dc .t{font-size:14.5px;font-weight:600;min-height:0}
+.dc .price{font-size:26px;margin-top:4px}
+.dc .btn{display:block;margin-top:8px;padding:12px 8px;font-size:15px;border-radius:12px}
+@media(min-width:640px){.dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.dc{grid-template-columns:1fr}}
 [hidden]{display:none!important}
 </style>
 </head><body>
@@ -75,6 +85,12 @@ footer a{color:var(--neon)}
     <div class="mark" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 40 40"><path d="M7 20 15 11h17a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H15z" fill="#0a0c09"/><circle cx="16.5" cy="20" r="2.2" fill="#39ff14"/><path d="M22 14v11l2.7-2.6 2 4.4 1.9-.8-2-4.3h3.7z" fill="#39ff14"/></svg></div>
     <div class="brand">Vale o Click</div>
   </header>
+
+  <section class="dest" id="destSec" hidden>
+    <h2 id="destTitle">🔥 As melhores ofertas de agora</h2>
+    <p class="sub" id="destSub">Toque no botão e compre direto na loja, com a garantia dela.</p>
+    <div class="dl" id="dest"></div>
+  </section>
 
   <section class="hero">
     <h1>Não perca tempo procurando promoção. <em>A gente acha pra você.</em></h1>
@@ -163,6 +179,27 @@ footer a{color:var(--neon)}
       </div></a>`;
   };
 
+  const lojaNome = i => ehShp(i) ? "Shopee" : "Mercado Livre";
+  const destCard = i => {
+    const o = off(i), img = safeImg(i.foto);
+    return `<a class="dc" data-n="${esc(i.n)}" href="${esc(safeUrl(i.link))}" rel="noopener sponsored" target="_blank">
+      <div class="ph">${img ? `<img src="${esc(img)}" alt="" loading="eager">` : ""}${o >= 5 ? `<span class="off">-${o}%</span>` : ""}</div>
+      <div><div class="t">${esc(i.titulo)}</div>
+        <div class="price">${brl(i.preco)}</div>${o >= 5 ? `<div class="old">${brl(i.preco_antes)}</div>` : ""}
+        <span class="btn">Ver no ${lojaNome(i)} →</span></div></a>`;
+  };
+  const doIG = /utm_source=instagram|[?&]ig\b/i.test(location.search) || /instagram/i.test(document.referrer);
+  let destaques = [];
+  try { const c = localStorage.getItem("voc_vitrine"); if (c) destaques = JSON.parse(c).destaques || []; } catch (_) {}
+  function renderDest() {
+    let d = destaques.slice(0, 5);
+    if (d.length < 3) d = [...items].sort((a, b) => ((b.cliques || 0) * 5 + off(b)) - ((a.cliques || 0) * 5 + off(a))).slice(0, 3);
+    else if (!doIG) d = d.slice(0, 3);
+    $("destSec").hidden = d.length === 0;
+    if (destaques.length >= 3 && doIG) { $("destTitle").textContent = "📲 As ofertas do nosso post"; $("destSub").textContent = "Essas são as ofertas que você viu no Instagram. Toque no botão e compre direto na loja."; }
+    $("dest").innerHTML = d.map(destCard).join("");
+  }
+
   function renderCats() {
     const cont = {};
     items.forEach(i => { const g = grupo(i.categoria); cont[g] = (cont[g] || 0) + 1; });
@@ -203,21 +240,23 @@ footer a{color:var(--neon)}
       if (!r.ok) throw new Error(r.status);
       const j = await r.json();
       items = j.itens || [];
+      destaques = j.destaques || [];
       try { localStorage.setItem("voc_vitrine", JSON.stringify(j)); } catch (_) {}
       $("note").hidden = true;
     } catch (e) {
       $("note").hidden = false;
       $("note").textContent = items.length ? "Sem conexão agora: mostrando a última lista carregada." : "Não consegui carregar as ofertas. Tente de novo em instantes.";
     }
-    renderCats(); render();
+    renderCats(); render(); renderDest();
   }
 
   $("q").addEventListener("input", render);
   ["fLoja", "fPreco", "fOrdem"].forEach(id => $(id).addEventListener("change", render));
-  document.addEventListener("click", ev => { const a = ev.target.closest && ev.target.closest("a.card"); if (a) hit(Number(a.dataset.n) || 0, "clique"); });
+  document.addEventListener("click", ev => { const a = ev.target.closest && ev.target.closest("a.card, a.dc"); if (a) hit(Number(a.dataset.n) || 0, "clique"); });
   const h = location.hash.replace("#", ""); if (/^\d+$/.test(h)) $("q").value = h;
-  if (items.length) { renderCats(); render(); }
+  if (items.length) { renderCats(); render(); renderDest(); }
   hit(0, "visita");
+  if (doIG) hit(0, "visita_ig");
   load();
 })();
 </script>
