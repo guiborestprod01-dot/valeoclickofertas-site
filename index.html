@@ -169,7 +169,7 @@ footer a{color:var(--neon)}
   const card = i => {
     const o = off(i), img = safeImg(i.foto), shp = ehShp(i);
     return `<a class="card" data-n="${esc(i.n)}" href="${esc(safeUrl(i.link))}" rel="noopener sponsored" target="_blank">
-      <div class="ph">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ""}<span class="n">nº ${esc(i.n)}</span>${o >= 5 ? `<span class="off">-${o}%</span>` : ""}<span class="loja${shp ? " shp" : ""}">${shp ? "Shopee" : "Mercado Livre"}</span></div>
+      <div class="ph">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ""}${i.n < 900000 ? `<span class="n">nº ${esc(i.n)}</span>` : ""}${o >= 5 ? `<span class="off">-${o}%</span>` : ""}<span class="loja${shp ? " shp" : ""}">${shp ? "Shopee" : "Mercado Livre"}</span></div>
       <div class="body">
         <div class="t">${esc(i.titulo)}</div>
         <div><div class="price">${brl(i.preco)}</div>${o >= 5 ? `<div class="old">${brl(i.preco_antes)}</div>` : ""}</div>
