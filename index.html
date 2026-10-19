@@ -145,7 +145,10 @@ footer a{color:var(--neon)}
     const f = x => x.toLocaleDateString("pt-BR", { timeZone: "America/Cuiaba" });
     return (f(d) === f(hoje) ? "hoje" : d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", timeZone: "America/Cuiaba" })) + " às " + hhmm(iso);
   };
+  const FIXAS = ["Eletrônicos", "Eletrodomésticos", "Informática", "Móveis"];
   const GRUPOS = [
+    ["Eletrodomésticos", /eletrodom/i],
+    ["Móveis", /^móveis$|colchõ/i],
     ["Casa", /casa|cozinha|organiza|decora|lavander|ilumina|cama|banho|móve/i],
     ["Pet", /animai|pet/i],
     ["Celular", /celular|telefon/i],
@@ -203,7 +206,7 @@ footer a{color:var(--neon)}
   function renderCats() {
     const cont = {};
     items.forEach(i => { const g = grupo(i.categoria); cont[g] = (cont[g] || 0) + 1; });
-    const lista = [["", "Todas", items.length], ...Object.entries(cont).sort((a, b) => b[1] - a[1]).map(([g, n]) => [g, g, n])];
+    const lista = [["", "Todas", items.length], ...Object.entries(cont).sort((a, b) => ((FIXAS.indexOf(a[0]) + 1) || 99) - ((FIXAS.indexOf(b[0]) + 1) || 99) || b[1] - a[1]).map(([g, n]) => [g, g, n])];
     $("cats").innerHTML = lista.map(([v, l, n]) => `<button class="chip" data-v="${esc(v)}" aria-pressed="${v === cat}">${esc(l)} <span style="opacity:.6">${n}</span></button>`).join("");
     $("cats").querySelectorAll(".chip").forEach(b => b.onclick = () => { cat = b.dataset.v; renderCats(); render(); });
   }
