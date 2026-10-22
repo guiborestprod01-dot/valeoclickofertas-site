@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://valeoclickofertas.com.br/sitemap.xml
