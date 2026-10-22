@@ -77,6 +77,10 @@ footer a{color:var(--neon)}
 .dc .price{font-size:26px;margin-top:4px}
 .dc .btn{display:block;margin-top:8px;padding:12px 8px;font-size:15px;border-radius:12px}
 @media(min-width:640px){.dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.dc{grid-template-columns:1fr}}
+.tgbar{position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:20;display:flex;align-items:center;gap:10px;background:#13160f;border:1px solid var(--neon);border-radius:14px;padding:10px 12px;box-shadow:0 8px 30px rgba(0,0,0,.5);max-width:560px;margin:0 auto}
+.tgbar a{flex:1;color:var(--fg);text-decoration:none;font-size:14px;line-height:1.3}.tgbar a b{color:var(--neon)}
+.tgbar button{flex:none;background:none;border:0;color:var(--muted);font-size:22px;line-height:1;padding:4px 6px;cursor:pointer}
+body.tgpad .wrap{padding-bottom:110px}
 [hidden]{display:none!important}
 </style>
 </head><body>
@@ -118,6 +122,8 @@ footer a{color:var(--neon)}
   </div>
   <div id="note" class="note" hidden></div>
 
+  <!--SEO-LINKS--><!--/SEO-LINKS-->
+
   <div class="how">
     <div><b>1. A gente garimpa</b>Todo dia o sistema varre os mais vendidos e só fica com desconto real.</div>
     <div><b>2. Confere o preço</b>Cada oferta mostra quando o preço foi conferido.</div>
@@ -130,6 +136,13 @@ footer a{color:var(--neon)}
     <a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram @valeoclickbr.ofertas</a> · <a href="https://x.com/ValeoClickBR" rel="noopener">X @ValeoClickBR</a> · <a href="https://t.me/valeoclickofertas" rel="noopener">Telegram</a>
   </footer>
 </div>
+<div class="tgbar" id="tgbar" hidden><a href="https://t.me/valeoclickofertas" rel="noopener" id="tglink">📲 <b>Receba as promoções na hora</b><br>Entre no nosso canal grátis do Telegram</a><button type="button" id="tgx" aria-label="Fechar">×</button></div>
+<script>
+(() => {
+  try { if (!localStorage.getItem("voc_tg_x")) { document.getElementById("tgbar").hidden = false; document.body.classList.add("tgpad"); } } catch (_) { document.getElementById("tgbar").hidden = false; }
+  document.getElementById("tgx").onclick = () => { document.getElementById("tgbar").hidden = true; document.body.classList.remove("tgpad"); try { localStorage.setItem("voc_tg_x", "1"); } catch (_) {} };
+})();
+</script>
 <script>
 (() => {
   const API = "https://pgxhfrkiitninpepppvb.supabase.co/rest/v1/rpc/voc_vitrine";
