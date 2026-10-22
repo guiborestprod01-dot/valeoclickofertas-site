@@ -208,14 +208,19 @@ body.tgpad .wrap{padding-bottom:110px}
         <span class="btn">Ver no ${lojaNome(i)} →</span></div></a>`;
   };
   const doIG = /utm_source=instagram|[?&]ig\b/i.test(location.search) || /instagram/i.test(document.referrer);
-  let destaques = [];
-  try { const c = localStorage.getItem("voc_vitrine"); if (c) destaques = JSON.parse(c).destaques || []; } catch (_) {}
+  let destaques = [], shpDia = [];
+  try { const c = localStorage.getItem("voc_vitrine"); if (c) { const j = JSON.parse(c); destaques = j.destaques || []; shpDia = j.shopee_dia || []; } } catch (_) {}
   function renderDest() {
-    let d = destaques.slice(0, 5);
-    if (d.length < 3) d = [...items].sort((a, b) => ((b.cliques || 0) * 5 + off(b)) - ((a.cliques || 0) * 5 + off(a))).slice(0, 3);
-    else if (!doIG) d = d.slice(0, 3);
+    let d;
+    if (destaques.length >= 3 && doIG) {
+      d = destaques.slice(0, 5);
+      $("destTitle").textContent = "📲 As ofertas do nosso post"; $("destSub").textContent = "Essas são as ofertas que você viu no Instagram. Toque no botão e compre direto na loja.";
+    } else if (shpDia.length >= 3) {
+      // desde 22/10/2026: banner de entrada = ofertas do dia da Shopee
+      d = shpDia.slice(0, 3);
+      $("destTitle").textContent = "🛍️ Ofertas do dia da Shopee"; $("destSub").textContent = "Achados da Shopee com desconto de verdade, conferidos hoje. Toque e compre direto no app ou site da Shopee.";
+    } else d = [...items].sort((a, b) => ((b.cliques || 0) * 5 + off(b)) - ((a.cliques || 0) * 5 + off(a))).slice(0, 3);
     $("destSec").hidden = d.length === 0;
-    if (destaques.length >= 3 && doIG) { $("destTitle").textContent = "📲 As ofertas do nosso post"; $("destSub").textContent = "Essas são as ofertas que você viu no Instagram. Toque no botão e compre direto na loja."; }
     $("dest").innerHTML = d.map(destCard).join("");
   }
 
@@ -260,6 +265,7 @@ body.tgpad .wrap{padding-bottom:110px}
       const j = await r.json();
       items = j.itens || [];
       destaques = j.destaques || [];
+      shpDia = j.shopee_dia || [];
       try { localStorage.setItem("voc_vitrine", JSON.stringify(j)); } catch (_) {}
       $("note").hidden = true;
     } catch (e) {
