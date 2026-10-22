@@ -56,6 +56,8 @@ h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-s
 .old{color:var(--muted);font-size:12.5px;text-decoration:line-through}
 .meta{color:var(--muted);font-size:12px}
 .ship{color:var(--neon);font-size:12px;font-weight:600}
+.fg{position:absolute;bottom:8px;right:8px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--ink);color:var(--neon)}
+.more{display:block;width:100%;margin:14px 0 0;font:inherit;font-weight:700;font-size:15px;background:var(--panel);color:var(--fg);border:1px solid var(--neon);border-radius:12px;padding:13px;cursor:pointer}
 .btn{margin-top:auto;background:var(--neon);color:var(--ink);text-align:center;font-weight:700;border-radius:10px;padding:10px 8px;font-size:14px}
 .empty,.note{color:var(--muted);font-size:13px;text-align:center;padding:18px 8px}
 .skel{aspect-ratio:.62;border-radius:16px;background:linear-gradient(90deg,var(--panel),#1b1f16,var(--panel));background-size:200% 100%;animation:sh 1.2s infinite}
@@ -108,7 +110,7 @@ body.tgpad .wrap{padding-bottom:110px}
   <div class="filters">
     <select id="fLoja" aria-label="Loja"><option value="">Lojas</option><option value="ml">Merc. Livre</option><option value="shopee">Shopee</option></select>
     <select id="fPreco" aria-label="Preço"><option value="">Preço</option><option value="30">Até R$ 30</option><option value="50">Até R$ 50</option><option value="100">Até R$ 100</option></select>
-    <select id="fOrdem" aria-label="Ordenar"><option value="novo">Recentes</option><option value="desc">Desconto</option><option value="barato">Mais barato</option><option value="clicadas">Clicadas</option></select>
+    <select id="fOrdem" aria-label="Ordenar"><option value="melhor">Melhores</option><option value="novo">Recentes</option><option value="desc">Desconto</option><option value="barato">Mais barato</option><option value="clicadas">Clicadas</option></select>
   </div>
 
   <section id="topSec" hidden>
@@ -120,6 +122,7 @@ body.tgpad .wrap{padding-bottom:110px}
   <div id="grid" class="grid" aria-live="polite">
     <div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>
   </div>
+  <button type="button" class="more" id="more" hidden></button>
   <div id="note" class="note" hidden></div>
 
   <!--SEO-LINKS-->
@@ -180,7 +183,9 @@ body.tgpad .wrap{padding-bottom:110px}
   const off = i => i.preco_antes && i.preco_antes > i.preco ? Math.round((1 - i.preco / i.preco_antes) * 100) : 0;
   const ehShp = i => i.loja === "shopee" || /shopee|shp\.ee/.test(i.link || "");
 
-  let items = [], cat = "";
+  let items = [], cat = "", lim = 24;
+  // desde 22/10/2026: "Melhores" = desconto + frete grátis + cliques + conferido há pouco
+  const nota = i => off(i) + (i.frete_gratis ? 8 : 0) + Math.min(30, (i.cliques || 0) * 5) + (Date.now() - new Date(i.publicado_em) < 6 * 3600e3 ? 5 : 0);
   try { const c = localStorage.getItem("voc_vitrine"); if (c) items = JSON.parse(c).itens || []; } catch (_) {}
 
   const hit = (n, kind) => { try { fetch(API.replace("voc_vitrine", "voc_vitrine_hit"), { method: "POST", keepalive: true, headers: { "Content-Type": "application/json", apikey: KEY, Authorization: "Bearer " + KEY }, body: JSON.stringify({ p_n: n, p_kind: kind }) }); } catch (_) {} };
@@ -188,7 +193,7 @@ body.tgpad .wrap{padding-bottom:110px}
   const card = i => {
     const o = off(i), img = safeImg(i.foto), shp = ehShp(i);
     return `<a class="card" data-n="${esc(i.n)}" href="${esc(safeUrl(i.link))}" rel="noopener sponsored" target="_blank">
-      <div class="ph">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ""}${i.n < 900000 ? `<span class="n">nº ${esc(i.n)}</span>` : ""}${o >= 5 ? `<span class="off">-${o}%</span>` : ""}<span class="loja${shp ? " shp" : ""}">${shp ? "Shopee" : "Mercado Livre"}</span></div>
+      <div class="ph">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ""}${i.n < 900000 ? `<span class="n">nº ${esc(i.n)}</span>` : ""}${o >= 5 ? `<span class="off">-${o}%</span>` : ""}<span class="loja${shp ? " shp" : ""}">${shp ? "Shopee" : "Mercado Livre"}</span>${i.frete_gratis ? `<span class="fg">Frete grátis</span>` : ""}</div>
       <div class="body">
         <div class="t">${esc(i.titulo)}</div>
         <div><div class="price">${brl(i.preco)}</div>${o >= 5 ? `<div class="old">${brl(i.preco_antes)}</div>` : ""}</div>
@@ -229,7 +234,7 @@ body.tgpad .wrap{padding-bottom:110px}
     items.forEach(i => { const g = grupo(i.categoria); cont[g] = (cont[g] || 0) + 1; });
     const lista = [["", "Todas", items.length], ...Object.entries(cont).sort((a, b) => ((FIXAS.indexOf(a[0]) + 1) || 99) - ((FIXAS.indexOf(b[0]) + 1) || 99) || b[1] - a[1]).map(([g, n]) => [g, g, n])];
     $("cats").innerHTML = lista.map(([v, l, n]) => `<button class="chip" data-v="${esc(v)}" aria-pressed="${v === cat}">${esc(l)} <span style="opacity:.6">${n}</span></button>`).join("");
-    $("cats").querySelectorAll(".chip").forEach(b => b.onclick = () => { cat = b.dataset.v; renderCats(); render(); });
+    $("cats").querySelectorAll(".chip").forEach(b => b.onclick = () => { cat = b.dataset.v; lim = 24; renderCats(); render(); });
   }
 
   function render() {
@@ -240,11 +245,14 @@ body.tgpad .wrap{padding-bottom:110px}
       (!cat || grupo(i.categoria) === cat) &&
       (!loja || (loja === "shopee") === ehShp(i)) &&
       (!max || Number(i.preco) <= max));
-    if (ordem === "desc") list.sort((a, b) => off(b) - off(a));
+    if (ordem === "melhor") list.sort((a, b) => nota(b) - nota(a));
+    else if (ordem === "desc") list.sort((a, b) => off(b) - off(a));
     else if (ordem === "barato") list.sort((a, b) => a.preco - b.preco);
     else if (ordem === "clicadas") list.sort((a, b) => (b.cliques || 0) - (a.cliques || 0));
     $("gridTitle").textContent = cat ? `Ofertas · ${cat}` : "Ofertas de hoje";
-    $("grid").innerHTML = list.length ? list.map(card).join("") :
+    $("more").hidden = list.length <= lim;
+    $("more").textContent = `Ver mais ofertas (${list.length - lim})`;
+    $("grid").innerHTML = list.length ? list.slice(0, lim).map(card).join("") :
       `<div class="empty" style="grid-column:1/-1">${items.length ? "Nada encontrado com esses filtros." : "Novas ofertas chegam ao longo do dia. Volte daqui a pouco!"}</div>`;
 
     const top = [...items].filter(i => (i.cliques || 0) > 0).sort((a, b) => b.cliques - a.cliques).slice(0, 8);
@@ -275,8 +283,17 @@ body.tgpad .wrap{padding-bottom:110px}
     renderCats(); render(); renderDest();
   }
 
-  $("q").addEventListener("input", render);
-  ["fLoja", "fPreco", "fOrdem"].forEach(id => $(id).addEventListener("change", render));
+  $("q").addEventListener("input", () => { lim = 24; render(); });
+  ["fLoja", "fPreco", "fOrdem"].forEach(id => $(id).addEventListener("change", () => { lim = 24; render(); }));
+  $("more").onclick = () => { lim += 24; render(); };
+  // links com filtro pronto (anúncios e páginas do Google): ?cat=Pet&q=fone&loja=shopee&max=50
+  try {
+    const p = new URLSearchParams(location.search);
+    if (p.get("cat")) cat = p.get("cat");
+    if (p.get("q")) $("q").value = p.get("q");
+    if (["ml", "shopee"].includes(p.get("loja"))) $("fLoja").value = p.get("loja");
+    if (["30", "50", "100"].includes(p.get("max"))) $("fPreco").value = p.get("max");
+  } catch (_) {}
   document.addEventListener("click", ev => { const a = ev.target.closest && ev.target.closest("a.card, a.dc"); if (a) hit(Number(a.dataset.n) || 0, "clique"); });
   const h = location.hash.replace("#", ""); if (/^\d+$/.test(h)) $("q").value = h;
   if (items.length) { renderCats(); render(); renderDest(); }
