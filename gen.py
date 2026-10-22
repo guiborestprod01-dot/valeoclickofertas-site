@@ -27,6 +27,15 @@ OUT = os.path.dirname(os.path.abspath(__file__))
 
 # slug, título (h1), título da aba, descrição, introdução, filtro
 TEMAS = [
+    # datas de vendas (desde 22/10/2026): as páginas já existem antes da data para o Google mostrar a tempo
+    ("ofertas-11-11-shopee", "Ofertas 11.11 da Shopee", "Ofertas 11.11 Shopee 2026: maiores descontos | Vale o Click",
+     "O 11.11 da Shopee é em 11 de novembro. Veja os maiores descontos da Shopee, conferidos hoje e atualizados a cada 6 horas.",
+     "O 11.11 da Shopee é no dia 11 de novembro, o maior dia de ofertas da Shopee no ano. Enquanto ele não chega, aqui estão os maiores descontos da Shopee de hoje. A lista é atualizada a cada 6 horas e, no dia 11/11, traz as ofertas do evento. Ative também os cupons da Shopee antes de comprar.",
+     lambda o: o["l"] == "shopee" and o["off"] >= 40),
+    ("black-friday", "Black Friday 2026: ofertas com desconto de verdade", "Black Friday 2026: ofertas com desconto real | Vale o Click",
+     "A Black Friday 2026 é em 27 de novembro. Ofertas do Mercado Livre e da Shopee com desconto conferido, atualizadas a cada 6 horas.",
+     "A Black Friday 2026 é no dia 27 de novembro. Aqui só entram ofertas com 40% ou mais de desconto, de vendedores bem avaliados, com o preço conferido várias vezes por dia, para você não cair em desconto falso. A lista é atualizada a cada 6 horas até a Black Friday.",
+     lambda o: o["off"] >= 40),
     ("fones-bluetooth-em-promocao", "Fones Bluetooth em promoção hoje", "Fones Bluetooth em promoção hoje | Vale o Click",
      "Fones de ouvido Bluetooth com desconto de verdade no Mercado Livre e na Shopee, preço conferido hoje.",
      "Separamos os fones de ouvido sem fio (TWS, esportivos e gamer) com o maior desconto real de hoje. Todos os preços são conferidos várias vezes por dia e só entra produto de vendedor bem avaliado.",
