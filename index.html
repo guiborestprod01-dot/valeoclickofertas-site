@@ -205,7 +205,7 @@ body.tgpad .wrap{padding-bottom:110px}
       <div class="ph">${img ? `<img src="${esc(img)}" alt="" loading="eager">` : ""}${o >= 5 ? `<span class="off">-${o}%</span>` : ""}</div>
       <div><div class="t">${esc(i.titulo)}</div>
         <div class="price">${brl(i.preco)}</div>${o >= 5 ? `<div class="old">${brl(i.preco_antes)}</div>` : ""}
-        <span class="btn">Ver no ${lojaNome(i)} →</span></div></a>`;
+        <span class="btn">Ver oferta</span></div></a>`;
   };
   const doIG = /utm_source=instagram|[?&]ig\b/i.test(location.search) || /instagram/i.test(document.referrer);
   let destaques = [], shpDia = [];
