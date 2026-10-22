@@ -1,0 +1,31 @@
+name: Paginas para o Google
+# Gera as paginas tematicas (SEO), a de cupons, o sitemap e os links da pagina inicial
+# com as ofertas do dia. Roda a cada 6 horas e sempre que o gerador muda.
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['gen.py', '.github/workflows/paginas.yml']
+permissions:
+  contents: write
+concurrency:
+  group: paginas
+  cancel-in-progress: false
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerar paginas
+        run: python3 gen.py
+      - name: Publicar
+        run: |
+          rm -rf __pycache__
+          git config user.name "vale-o-click-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "nada mudou"; exit 0; fi
+          git commit -m "Atualiza paginas de ofertas"
+          git push
