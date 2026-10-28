@@ -306,14 +306,14 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
     else if (ordem === "clicadas") list.sort((a, b) => (b.cliques || 0) - (a.cliques || 0));
     if (!q) list = variado(list, cat ? 4 : 2);
     // desde 28/10/2026: "Ofertas do dia" = as 8 melhores conferidas nas últimas 24h (sem filtro ativo)
-    const dia = c => [...items].filter(i => Date.now() - new Date(i.publicado_em) < c * 3600e3 && off(i) >= 20 && !(window.__banner || []).some(b => b.titulo === i.titulo));
+    const dia = c => [...items].filter(i => Date.now() - new Date(i.publicado_em) < c * 3600e3 && off(i) >= 20 && !(window.__banner || []).some(b => tipo(b) === tipo(i)));
     let top = dia(24); if (top.length < 8) top = dia(48);
     top = variado(top.sort((a, b) => nota(b) - nota(a)), 1).slice(0, 8);
     $("topSec").hidden = !(top.length >= 4 && !q && !cat && !loja && !max);
     if (!$("topSec").hidden) $("top").innerHTML = top.map(card).join("");
     renderNichos();
     // o que já aparece no banner e em "Ofertas do dia" não se repete na lista de baixo
-    if (!q && !cat && !loja && !max) { const ja = new Set([...(window.__banner || []), ...(!$("topSec").hidden ? top : [])].map(i => i.titulo)); list = list.filter(i => !ja.has(i.titulo)); }
+    if (!q && !cat && !loja && !max) { const ja = new Set([...(window.__banner || []), ...(!$("topSec").hidden ? top : [])].map(i => norm(limpa(i.titulo)).slice(0, 5).join(" "))); list = list.filter(i => !ja.has(norm(limpa(i.titulo)).slice(0, 5).join(" "))); }
     $("gridTitle").textContent = (cat ? `Nicho: ${cat}` : "Mostrando todas") + ` · ${list.length} oferta${list.length === 1 ? "" : "s"}`;
     $("more").hidden = list.length <= lim;
     $("more").textContent = `Ver mais ofertas (${list.length - lim})`;
