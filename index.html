@@ -270,6 +270,7 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
       d = variado(shpDia, 1).slice(0, 3);
       $("destTitle").textContent = "🛍️ Ofertas do dia da Shopee"; $("destSub").textContent = "Achados da Shopee com desconto de verdade, conferidos hoje. Toque e compre direto no app ou site da Shopee.";
     } else d = [...items].sort((a, b) => ((b.cliques || 0) * 5 + off(b)) - ((a.cliques || 0) * 5 + off(a))).slice(0, 3);
+    window.__banner = d;
     $("destSec").hidden = d.length === 0;
     $("dest").innerHTML = d.map(destCard).join("");
   }
@@ -304,12 +305,6 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
     else if (ordem === "barato") list.sort((a, b) => a.preco - b.preco);
     else if (ordem === "clicadas") list.sort((a, b) => (b.cliques || 0) - (a.cliques || 0));
     if (!q) list = variado(list, cat ? 4 : 2);
-    $("gridTitle").textContent = (cat ? `Nicho: ${cat}` : "Mostrando todas") + ` · ${list.length} oferta${list.length === 1 ? "" : "s"}`;
-    $("more").hidden = list.length <= lim;
-    $("more").textContent = `Ver mais ofertas (${list.length - lim})`;
-    $("grid").innerHTML = list.length ? list.slice(0, lim).map(card).join("") :
-      `<div class="empty" style="grid-column:1/-1">${items.length ? "Nada encontrado com esses filtros." : "Novas ofertas chegam ao longo do dia. Volte daqui a pouco!"}</div>`;
-
     // desde 28/10/2026: "Ofertas do dia" = as 8 melhores conferidas nas últimas 24h (sem filtro ativo)
     const dia = c => [...items].filter(i => Date.now() - new Date(i.publicado_em) < c * 3600e3 && off(i) >= 20);
     let top = dia(24); if (top.length < 8) top = dia(48);
@@ -317,6 +312,15 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
     $("topSec").hidden = !(top.length >= 4 && !q && !cat && !loja && !max);
     if (!$("topSec").hidden) $("top").innerHTML = top.map(card).join("");
     renderNichos();
+    // o que já aparece no banner e em "Ofertas do dia" não se repete na lista de baixo
+    if (!q && !cat && !loja && !max) { const ja = new Set([...(window.__banner || []), ...(!$("topSec").hidden ? top : [])].map(i => i.titulo)); list = list.filter(i => !ja.has(i.titulo)); }
+    $("gridTitle").textContent = (cat ? `Nicho: ${cat}` : "Mostrando todas") + ` · ${list.length} oferta${list.length === 1 ? "" : "s"}`;
+    $("more").hidden = list.length <= lim;
+    $("more").textContent = `Ver mais ofertas (${list.length - lim})`;
+    $("grid").innerHTML = list.length ? list.slice(0, lim).map(card).join("") :
+      `<div class="empty" style="grid-column:1/-1">${items.length ? "Nada encontrado com esses filtros." : "Novas ofertas chegam ao longo do dia. Volte daqui a pouco!"}</div>`;
+
+
 
     if (items.length) {
       const maior = Math.max(0, ...items.map(off));
@@ -339,7 +343,7 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
       $("note").hidden = false;
       $("note").textContent = items.length ? "Sem conexão agora: mostrando a última lista carregada." : "Não consegui carregar as ofertas. Tente de novo em instantes.";
     }
-    renderCats(); render(); renderDest();
+    renderDest(); renderCats(); render();
   }
 
   $("q").addEventListener("input", () => { lim = 24; render(); });
@@ -355,7 +359,7 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
   } catch (_) {}
   document.addEventListener("click", ev => { const a = ev.target.closest && ev.target.closest("a.card, a.dc"); if (a) hit(Number(a.dataset.n) || 0, "clique"); });
   const h = location.hash.replace("#", ""); if (/^\d+$/.test(h)) $("q").value = h;
-  if (items.length) { renderCats(); render(); renderDest(); }
+  if (items.length) { renderDest(); renderCats(); render(); }
   hit(0, "visita");
   if (doIG) hit(0, "visita_ig");
   load();
