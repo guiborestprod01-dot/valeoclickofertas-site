@@ -85,14 +85,33 @@ footer a{color:var(--neon)}
 .tgbar a{flex:1;color:var(--fg);text-decoration:none;font-size:14px;line-height:1.3}.tgbar a b{color:var(--neon)}
 .tgbar button{flex:none;background:none;border:0;color:var(--muted);font-size:22px;line-height:1;padding:4px 6px;cursor:pointer}
 body.tgpad .wrap{padding-bottom:110px}
+.tag{color:var(--muted);font-size:13.5px;margin-top:1px}
+header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav a{color:var(--muted);text-decoration:none}header .nav a:hover{color:var(--fg)}
+@media(max-width:640px){header .nav{display:none}}
+.hero{padding:6px 0 12px}.hero h1{font-size:clamp(21px,4.6vw,32px)}
+@media(max-width:640px){.fg{display:none}.hero p{display:none}}
+.steps{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.steps span{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:13px;color:var(--muted)}.steps b{color:var(--neon);margin-right:4px}
+.sec-sub{color:var(--muted);font-size:13.5px;margin:-4px 0 12px}
+.nichos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(min-width:640px){.nichos{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.nicho{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;color:var(--fg);font:inherit;text-align:left;cursor:pointer;min-height:58px}
+.nicho:hover,.nicho:focus-visible{border-color:var(--neon)}.nicho .e{font-size:24px;line-height:1}.nicho b{display:block;font-size:14.5px}.nicho small{color:var(--muted);font-size:12.5px}
+.faq{margin-top:22px}.faq details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px}.faq summary{cursor:pointer;font-weight:600}.faq p{color:var(--muted);margin:8px 0 0;font-size:14px}
 [hidden]{display:none!important}
 </style>
 </head><body>
 <div class="wrap">
   <header>
     <div class="mark" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 40 40"><path d="M7 20 15 11h17a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H15z" fill="#0a0c09"/><circle cx="16.5" cy="20" r="2.2" fill="#39ff14"/><path d="M22 14v11l2.7-2.6 2 4.4 1.9-.8-2-4.3h3.7z" fill="#39ff14"/></svg></div>
-    <div class="brand">Vale o Click</div>
+    <div><div class="brand">Vale o Click</div><div class="tag">Achados com desconto de verdade, conferidos todo dia</div></div>
+    <nav class="nav"><a href="#dia">Ofertas do dia</a><a href="#nichos">Nichos</a><a href="#todas">Todas</a><a href="#como">Como funciona</a><a href="/cupons/">Cupons</a></nav>
   </header>
+
+  <section class="hero">
+    <h1>Ofertas do dia do Mercado Livre e da Shopee, <em>com desconto conferido.</em></h1>
+    <p>A gente garimpa os mais vendidos, confere o preço e só mostra o que está barato de verdade. Você compra direto na loja oficial.</p>
+    <div class="stats" id="stats" hidden></div>
+  </section>
 
   <section class="dest" id="destSec" hidden>
     <h2 id="destTitle">🔥 As melhores ofertas de agora</h2>
@@ -100,13 +119,18 @@ body.tgpad .wrap{padding-bottom:110px}
     <div class="dl" id="dest"></div>
   </section>
 
-  <section class="hero">
-    <h1>Não perca tempo procurando promoção. <em>A gente acha pra você.</em></h1>
-    <p>Garimpamos o dia todo os achados com desconto de verdade no Mercado Livre e na Shopee, e juntamos tudo aqui, em um só lugar.</p>
-    <div class="stats" id="stats" hidden></div>
-    <a class="tgcta" href="https://t.me/valeoclickofertas" rel="noopener">📲 Receba as ofertas no Telegram, na hora que aparecem</a>
+  <section id="topSec" hidden>
+    <h2 id="dia">🔥 Ofertas do dia</h2>
+    <p class="sec-sub">As melhores de hoje: maior desconto, frete grátis e preço conferido nas últimas horas.</p>
+    <div class="top" id="top"></div>
   </section>
 
+  <section id="nichosSec" hidden>
+    <h2 id="nichos">Escolha seu nicho</h2>
+    <div class="nichos" id="nichosGrid"></div>
+  </section>
+
+  <h2 id="todas" style="margin-top:26px">Todas as ofertas</h2>
   <input id="q" class="search" type="search" inputmode="search" placeholder="Buscar produto ou nº do post" aria-label="Buscar produto ou número do post">
   <div class="chips" id="cats" role="group" aria-label="Categorias"></div>
   <div class="filters">
@@ -115,12 +139,7 @@ body.tgpad .wrap{padding-bottom:110px}
     <select id="fOrdem" aria-label="Ordenar"><option value="melhor">Melhores</option><option value="novo">Recentes</option><option value="desc">Desconto</option><option value="barato">Mais barato</option><option value="clicadas">Clicadas</option></select>
   </div>
 
-  <section id="topSec" hidden>
-    <h2>🔥 Mais clicadas da semana</h2>
-    <div class="top" id="top"></div>
-  </section>
-
-  <h2 id="gridTitle">Ofertas de hoje</h2>
+  <h2 id="gridTitle" style="font-size:16px;margin:16px 0 10px;color:var(--muted)">Mostrando todas</h2>
   <div id="grid" class="grid" aria-live="polite">
     <div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>
   </div>
@@ -132,10 +151,17 @@ body.tgpad .wrap{padding-bottom:110px}
   <div class="chips" style="flex-wrap:wrap"><a class="chip" style="text-decoration:none" href="/ofertas-11-11-shopee/">Ofertas 11.11 da Shopee</a><a class="chip" style="text-decoration:none" href="/black-friday/">Black Friday 2026: ofertas com desconto de verdade</a><a class="chip" style="text-decoration:none" href="/fones-bluetooth-em-promocao/">Fones Bluetooth em promoção hoje</a><a class="chip" style="text-decoration:none" href="/carregador-e-power-bank-em-promocao/">Carregadores e power banks em promoção</a><a class="chip" style="text-decoration:none" href="/presentes-ate-50-reais/">Presentes até R$ 50 em promoção</a><a class="chip" style="text-decoration:none" href="/ofertas-ate-100-reais/">Ofertas até R$ 100</a><a class="chip" style="text-decoration:none" href="/utilidades-para-casa-em-promocao/">Utilidades para casa em promoção</a><a class="chip" style="text-decoration:none" href="/ofertas-pet/">Ofertas para cachorro e gato</a><a class="chip" style="text-decoration:none" href="/caixa-de-som-bluetooth-em-promocao/">Caixas de som Bluetooth em promoção</a><a class="chip" style="text-decoration:none" href="/informatica-em-promocao/">Informática em promoção</a><a class="chip" style="text-decoration:none" href="/eletrodomesticos-em-promocao/">Eletrodomésticos em promoção</a><a class="chip" style="text-decoration:none" href="/moveis-em-promocao/">Móveis em promoção</a><a class="chip" style="text-decoration:none" href="/ofertas-shopee/">Ofertas da Shopee hoje</a><a class="chip" style="text-decoration:none" href="/games-em-promocao/">Games em promoção</a><a class="chip" style="text-decoration:none" href="/eletronicos-em-promocao/">Eletrônicos em promoção</a><a class="chip" style="text-decoration:none" href="/cupons/">Cupons de hoje</a></div>
   <!--/SEO-LINKS-->
 
-  <div class="how">
-    <div><b>1. A gente garimpa</b>Todo dia o sistema varre os mais vendidos e só fica com desconto real.</div>
-    <div><b>2. Confere o preço</b>Cada oferta mostra quando o preço foi conferido.</div>
-    <div><b>3. Você só escolhe</b>Toca na oferta e compra direto na loja, com a garantia dela.</div>
+  <h2 id="como" style="margin-top:28px">Como funciona</h2>
+  <div class="how" style="margin-top:0">
+    <div><b>1. A gente garimpa</b>Todo dia o sistema varre os mais vendidos do Mercado Livre e da Shopee e só fica com desconto real.</div>
+    <div><b>2. Confere o preço</b>O preço é conferido várias vezes por dia. Cada oferta mostra quando foi conferida.</div>
+    <div><b>3. Você compra na loja</b>Toque em "Ver oferta": você vai para a página oficial do produto e compra lá, com a garantia e o frete da loja.</div>
+  </div>
+  <div class="faq">
+    <details><summary>É seguro comprar por aqui?</summary><p>Sim. A gente não vende nada: o botão leva para a página oficial do produto no Mercado Livre ou na Shopee. O pagamento, a entrega e a garantia são da loja.</p></details>
+    <details><summary>Por que o preço na loja pode ser diferente?</summary><p>Promoções acabam e o estoque muda rápido. Conferimos várias vezes por dia, mas o preço que vale é o que aparece na loja na hora da compra.</p></details>
+    <details><summary>Como o Vale o Click ganha dinheiro?</summary><p>Os links são de afiliado: quando você compra, a loja nos paga uma pequena comissão. Você não paga nada a mais por isso.</p></details>
+    <details><summary>Tem cupom?</summary><p>Tem: veja a página <a href="/cupons/" style="color:var(--neon)">Cupons de hoje</a> com os cupons oficiais das lojas.</p></details>
   </div>
 
   <footer>
@@ -184,6 +210,9 @@ body.tgpad .wrap{padding-bottom:110px}
   const grupo = c => { for (const [g, re] of GRUPOS) if (re.test(c || "")) return g; return "Outros"; };
   const off = i => i.preco_antes && i.preco_antes > i.preco ? Math.round((1 - i.preco / i.preco_antes) * 100) : 0;
   const ehShp = i => i.loja === "shopee" || /shopee|shp\.ee/.test(i.link || "");
+  // desde 28/10/2026: título limpo (tira "2024 Novo", "Promoção", "Original" e repetições dos anúncios da Shopee)
+  const limpa = t => { let s = String(t || "").replace(/^\s*(20\d\d\s*)?(novo|nova|new|promo[çc][ãa]o|original|lan[çc]amento|oferta)\b[\s:!-]*/i, "").replace(/\b(20\d\d)\s+(novo|nova|new)\b/ig, "").replace(/\s{2,}/g, " ").trim(); return s ? s.charAt(0).toUpperCase() + s.slice(1) : String(t || ""); };
+  const NICHOS = { "Casa": "🏠", "Eletrônicos": "🎧", "Celular": "📱", "Informática": "💻", "Eletrodomésticos": "🍳", "Móveis": "🛋️", "Pet": "🐶", "Beleza": "💄", "Games": "🎮", "Esporte": "🏋️", "Bebê e brinquedos": "🧸", "Ferramentas": "🔧" };
 
   let items = [], cat = "", lim = 24;
   // desde 22/10/2026: "Melhores" = desconto + frete grátis + cliques + conferido há pouco
@@ -195,9 +224,9 @@ body.tgpad .wrap{padding-bottom:110px}
   const card = i => {
     const o = off(i), img = safeImg(i.foto), shp = ehShp(i);
     return `<a class="card" data-n="${esc(i.n)}" href="${esc(safeUrl(i.link))}" rel="noopener sponsored" target="_blank">
-      <div class="ph">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ""}${i.n < 900000 ? `<span class="n">nº ${esc(i.n)}</span>` : ""}${o >= 5 ? `<span class="off">-${o}%</span>` : ""}<span class="loja${shp ? " shp" : ""}">${shp ? "Shopee" : "Mercado Livre"}</span>${i.frete_gratis ? `<span class="fg">Frete grátis</span>` : ""}</div>
+      <div class="ph">${img ? `<img src="${esc(img)}" alt="" loading="lazy">` : ""}${i.n < 900000 && doIG ? `<span class="n">nº ${esc(i.n)}</span>` : ""}${o >= 5 ? `<span class="off">-${o}%</span>` : ""}<span class="loja${shp ? " shp" : ""}">${shp ? "Shopee" : "Mercado Livre"}</span>${i.frete_gratis ? `<span class="fg">Frete grátis</span>` : ""}</div>
       <div class="body">
-        <div class="t">${esc(i.titulo)}</div>
+        <div class="t">${esc(limpa(i.titulo))}</div>
         <div><div class="price">${brl(i.preco)}</div>${o >= 5 ? `<div class="old">${brl(i.preco_antes)}</div>` : ""}</div>
         ${i.frete_gratis ? `<div class="ship">📦 Frete grátis</div>` : ""}
         <div class="meta">Conferido ${esc(quando(i.publicado_em))}</div>
@@ -210,7 +239,7 @@ body.tgpad .wrap{padding-bottom:110px}
     const o = off(i), img = safeImg(i.foto);
     return `<a class="dc" data-n="${esc(i.n)}" href="${esc(safeUrl(i.link))}" rel="noopener sponsored" target="_blank">
       <div class="ph">${img ? `<img src="${esc(img)}" alt="" loading="eager">` : ""}${o >= 5 ? `<span class="off">-${o}%</span>` : ""}</div>
-      <div><div class="t">${esc(i.titulo)}</div>
+      <div><div class="t">${esc(limpa(i.titulo))}</div>
         <div class="price">${brl(i.preco)}</div>${o >= 5 ? `<div class="old">${brl(i.preco_antes)}</div>` : ""}
         <span class="btn">Ver oferta</span></div></a>`;
   };
@@ -229,6 +258,15 @@ body.tgpad .wrap{padding-bottom:110px}
     } else d = [...items].sort((a, b) => ((b.cliques || 0) * 5 + off(b)) - ((a.cliques || 0) * 5 + off(a))).slice(0, 3);
     $("destSec").hidden = d.length === 0;
     $("dest").innerHTML = d.map(destCard).join("");
+  }
+
+  function renderNichos() {
+    const cont = {};
+    items.forEach(i => { const g = grupo(i.categoria); if (NICHOS[g]) cont[g] = (cont[g] || 0) + 1; });
+    const lista = Object.entries(cont).filter(([, n]) => n >= 3).sort((x, y) => y[1] - x[1]);
+    $("nichosSec").hidden = lista.length < 3;
+    $("nichosGrid").innerHTML = lista.map(([g, n]) => `<button type="button" class="nicho" data-v="${esc(g)}"><span class="e">${NICHOS[g]}</span><span><b>${esc(g)}</b><small>${n} ofertas</small></span></button>`).join("");
+    $("nichosGrid").querySelectorAll(".nicho").forEach(b => b.onclick = () => { cat = b.dataset.v; lim = 24; renderCats(); render(); document.getElementById("todas").scrollIntoView({ behavior: "smooth" }); });
   }
 
   function renderCats() {
@@ -251,15 +289,19 @@ body.tgpad .wrap{padding-bottom:110px}
     else if (ordem === "desc") list.sort((a, b) => off(b) - off(a));
     else if (ordem === "barato") list.sort((a, b) => a.preco - b.preco);
     else if (ordem === "clicadas") list.sort((a, b) => (b.cliques || 0) - (a.cliques || 0));
-    $("gridTitle").textContent = cat ? `Ofertas · ${cat}` : "Ofertas de hoje";
+    $("gridTitle").textContent = (cat ? `Nicho: ${cat}` : "Mostrando todas") + ` · ${list.length} oferta${list.length === 1 ? "" : "s"}`;
     $("more").hidden = list.length <= lim;
     $("more").textContent = `Ver mais ofertas (${list.length - lim})`;
     $("grid").innerHTML = list.length ? list.slice(0, lim).map(card).join("") :
       `<div class="empty" style="grid-column:1/-1">${items.length ? "Nada encontrado com esses filtros." : "Novas ofertas chegam ao longo do dia. Volte daqui a pouco!"}</div>`;
 
-    const top = [...items].filter(i => (i.cliques || 0) > 0).sort((a, b) => b.cliques - a.cliques).slice(0, 8);
-    $("topSec").hidden = !(top.length >= 3 && !q && !cat && !loja && !max);
+    // desde 28/10/2026: "Ofertas do dia" = as 8 melhores conferidas nas últimas 24h (sem filtro ativo)
+    const dia = c => [...items].filter(i => Date.now() - new Date(i.publicado_em) < c * 3600e3 && off(i) >= 20);
+    let top = dia(24); if (top.length < 8) top = dia(48);
+    top = top.sort((a, b) => nota(b) - nota(a)).slice(0, 8);
+    $("topSec").hidden = !(top.length >= 4 && !q && !cat && !loja && !max);
     if (!$("topSec").hidden) $("top").innerHTML = top.map(card).join("");
+    renderNichos();
 
     if (items.length) {
       const maior = Math.max(0, ...items.map(off));
