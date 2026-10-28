@@ -212,6 +212,20 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
   const ehShp = i => i.loja === "shopee" || /shopee|shp\.ee/.test(i.link || "");
   // desde 28/10/2026: título limpo (tira "2024 Novo", "Promoção", "Original" e repetições dos anúncios da Shopee)
   const limpa = t => { let s = String(t || "").replace(/^\s*(20\d\d\s*)?(novo|nova|new|promo[çc][ãa]o|original|lan[çc]amento|oferta)\b[\s:!-]*/i, "").replace(/\b(20\d\d)\s+(novo|nova|new)\b/ig, "").replace(/\s{2,}/g, " ").trim(); return s ? s.charAt(0).toUpperCase() + s.slice(1) : String(t || ""); };
+  // desde 28/10/2026: variedade — some com repetidos e no máximo 2 do mesmo tipo no topo da lista
+  const TIPOS = [["fone", /fone|earbud|headset|\btws\b/i], ["relogio", /rel[oó]gio|smart ?watch|smartband/i], ["som", /caixa de som|caixinha|speaker|soundbar/i], ["powerbank", /power ?bank|carregador port[aá]til|bateria port/i], ["carregador", /carregador|fonte de/i], ["cabo", /\bcabo/i], ["mouse", /mouse/i], ["teclado", /teclado/i], ["garrafa", /garrafa|copo t[eé]rmico/i], ["whey", /whey|creatina/i]];
+  const norm = t => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 ]/g, " ").split(/\s+/).filter(w => w.length > 2 && !/^(com|para|sem|kit|novo|nova|original|promocao|unidades?|pecas?)$/.test(w));
+  const tipo = i => { for (const [k, re] of TIPOS) if (re.test(i.titulo || "")) return k; return norm(limpa(i.titulo)).slice(0, 2).join(" "); };
+  const variado = (list, max) => {
+    const vistos = new Set(), cont = {}, frente = [], resto = [];
+    for (const i of list) {
+      const k = norm(limpa(i.titulo)).slice(0, 5).join(" ");
+      if (vistos.has(k)) continue; vistos.add(k);
+      const t = tipo(i); cont[t] = (cont[t] || 0) + 1;
+      (cont[t] <= max ? frente : resto).push(i);
+    }
+    return frente.concat(resto);
+  };
   const NICHOS = { "Casa": "🏠", "Eletrônicos": "🎧", "Celular": "📱", "Informática": "💻", "Eletrodomésticos": "🍳", "Móveis": "🛋️", "Pet": "🐶", "Beleza": "💄", "Games": "🎮", "Esporte": "🏋️", "Bebê e brinquedos": "🧸", "Ferramentas": "🔧" };
 
   let items = [], cat = "", lim = 24;
@@ -253,7 +267,7 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
       $("destTitle").textContent = "📲 As ofertas do nosso post"; $("destSub").textContent = "Essas são as ofertas que você viu no Instagram. Toque no botão e compre direto na loja.";
     } else if (shpDia.length >= 3) {
       // desde 22/10/2026: banner de entrada = ofertas do dia da Shopee
-      d = shpDia.slice(0, 3);
+      d = variado(shpDia, 1).slice(0, 3);
       $("destTitle").textContent = "🛍️ Ofertas do dia da Shopee"; $("destSub").textContent = "Achados da Shopee com desconto de verdade, conferidos hoje. Toque e compre direto no app ou site da Shopee.";
     } else d = [...items].sort((a, b) => ((b.cliques || 0) * 5 + off(b)) - ((a.cliques || 0) * 5 + off(a))).slice(0, 3);
     $("destSec").hidden = d.length === 0;
@@ -289,6 +303,7 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
     else if (ordem === "desc") list.sort((a, b) => off(b) - off(a));
     else if (ordem === "barato") list.sort((a, b) => a.preco - b.preco);
     else if (ordem === "clicadas") list.sort((a, b) => (b.cliques || 0) - (a.cliques || 0));
+    if (!q) list = variado(list, cat ? 4 : 2);
     $("gridTitle").textContent = (cat ? `Nicho: ${cat}` : "Mostrando todas") + ` · ${list.length} oferta${list.length === 1 ? "" : "s"}`;
     $("more").hidden = list.length <= lim;
     $("more").textContent = `Ver mais ofertas (${list.length - lim})`;
@@ -298,7 +313,7 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
     // desde 28/10/2026: "Ofertas do dia" = as 8 melhores conferidas nas últimas 24h (sem filtro ativo)
     const dia = c => [...items].filter(i => Date.now() - new Date(i.publicado_em) < c * 3600e3 && off(i) >= 20);
     let top = dia(24); if (top.length < 8) top = dia(48);
-    top = top.sort((a, b) => nota(b) - nota(a)).slice(0, 8);
+    top = variado(top.sort((a, b) => nota(b) - nota(a)), 1).slice(0, 8);
     $("topSec").hidden = !(top.length >= 4 && !q && !cat && !loja && !max);
     if (!$("topSec").hidden) $("top").innerHTML = top.map(card).join("");
     renderNichos();
