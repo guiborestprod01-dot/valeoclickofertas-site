@@ -306,7 +306,7 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
     else if (ordem === "clicadas") list.sort((a, b) => (b.cliques || 0) - (a.cliques || 0));
     if (!q) list = variado(list, cat ? 4 : 2);
     // desde 28/10/2026: "Ofertas do dia" = as 8 melhores conferidas nas últimas 24h (sem filtro ativo)
-    const dia = c => [...items].filter(i => Date.now() - new Date(i.publicado_em) < c * 3600e3 && off(i) >= 20);
+    const dia = c => [...items].filter(i => Date.now() - new Date(i.publicado_em) < c * 3600e3 && off(i) >= 20 && !(window.__banner || []).some(b => b.titulo === i.titulo));
     let top = dia(24); if (top.length < 8) top = dia(48);
     top = variado(top.sort((a, b) => nota(b) - nota(a)), 1).slice(0, 8);
     $("topSec").hidden = !(top.length >= 4 && !q && !cat && !loja && !max);
