@@ -214,12 +214,14 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
   const limpa = t => { let s = String(t || "").replace(/^\s*(20\d\d\s*)?(novo|nova|new|promo[çc][ãa]o|original|lan[çc]amento|oferta)\b[\s:!-]*/i, "").replace(/\b(20\d\d)\s+(novo|nova|new)\b/ig, "").replace(/\s{2,}/g, " ").trim(); return s ? s.charAt(0).toUpperCase() + s.slice(1) : String(t || ""); };
   // desde 28/10/2026: variedade — some com repetidos e no máximo 2 do mesmo tipo no topo da lista
   const TIPOS = [["fone", /fone|earbud|headset|\btws\b/i], ["relogio", /rel[oó]gio|smart ?watch|smartband/i], ["som", /caixa de som|caixinha|speaker|soundbar/i], ["powerbank", /power ?bank|carregador port[aá]til|bateria port/i], ["carregador", /carregador|fonte de/i], ["cabo", /\bcabo/i], ["mouse", /mouse/i], ["teclado", /teclado/i], ["garrafa", /garrafa|copo t[eé]rmico/i], ["whey", /whey|creatina/i]];
-  const norm = t => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 ]/g, " ").split(/\s+/).filter(w => w.length > 2 && !/^(com|para|sem|kit|novo|nova|original|promocao|unidades?|pecas?)$/.test(w));
-  const tipo = i => { for (const [k, re] of TIPOS) if (re.test(i.titulo || "")) return k; return norm(limpa(i.titulo)).slice(0, 2).join(" "); };
+  const norm = t => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 ]/g, " ").split(/\s+/).filter(w => w.length > 2 && !/^\d+$/.test(w) && !/^(com|para|sem|kit|jogo|conjunto|par|novo|nova|original|promocao|unidades?|pecas?|und|unid|cores?|preto|branco|grande|pequeno|premium|lancamento)$/.test(w));
+  // desde 28/10/2026: o "tipo" é a primeira palavra que diz o que é o produto (cabide, potes, tapete…), no singular
+  const chave = i => [...new Set(norm(limpa(i.titulo)))].sort().join(" ");
+  const tipo = i => { for (const [k, re] of TIPOS) if (re.test(i.titulo || "")) return k; const w = norm(limpa(i.titulo))[0] || ""; return w.replace(/oes$/, "ao").replace(/s$/, ""); };
   const variado = (list, max) => {
     const vistos = new Set(), cont = {}, frente = [], resto = [];
     for (const i of list) {
-      const k = norm(limpa(i.titulo)).slice(0, 5).join(" ");
+      const k = chave(i);
       if (vistos.has(k)) continue; vistos.add(k);
       const t = tipo(i); cont[t] = (cont[t] || 0) + 1;
       (cont[t] <= max ? frente : resto).push(i);
@@ -304,7 +306,7 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
     else if (ordem === "desc") list.sort((a, b) => off(b) - off(a));
     else if (ordem === "barato") list.sort((a, b) => a.preco - b.preco);
     else if (ordem === "clicadas") list.sort((a, b) => (b.cliques || 0) - (a.cliques || 0));
-    if (!q) list = variado(list, cat ? 4 : 2);
+    if (!q) list = variado(list, cat ? 3 : 1);
     // desde 28/10/2026: "Ofertas do dia" = as 8 melhores conferidas nas últimas 24h (sem filtro ativo)
     const dia = c => [...items].filter(i => Date.now() - new Date(i.publicado_em) < c * 3600e3 && off(i) >= 20 && !(window.__banner || []).some(b => tipo(b) === tipo(i)));
     let top = dia(24); if (top.length < 8) top = dia(48);
@@ -313,7 +315,7 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
     if (!$("topSec").hidden) $("top").innerHTML = top.map(card).join("");
     renderNichos();
     // o que já aparece no banner e em "Ofertas do dia" não se repete na lista de baixo
-    if (!q && !cat && !loja && !max) { const ja = new Set([...(window.__banner || []), ...(!$("topSec").hidden ? top : [])].map(i => norm(limpa(i.titulo)).slice(0, 5).join(" "))); list = list.filter(i => !ja.has(norm(limpa(i.titulo)).slice(0, 5).join(" "))); }
+    if (!q && !cat && !loja && !max) { const acima = [...(window.__banner || []), ...(!$("topSec").hidden ? top : [])]; const ja = new Set(acima.map(tipo)), mesmo = new Set(acima.map(chave)); list = list.filter(i => !mesmo.has(chave(i))); list = [...list.filter(i => !ja.has(tipo(i))), ...list.filter(i => ja.has(tipo(i)))]; }
     $("gridTitle").textContent = (cat ? `Nicho: ${cat}` : "Mostrando todas") + ` · ${list.length} oferta${list.length === 1 ? "" : "s"}`;
     $("more").hidden = list.length <= lim;
     $("more").textContent = `Ver mais ofertas (${list.length - lim})`;
