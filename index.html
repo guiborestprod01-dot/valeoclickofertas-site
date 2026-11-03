@@ -85,6 +85,7 @@ footer a{color:var(--neon)}
 .tgbar a{flex:1;color:var(--fg);text-decoration:none;font-size:14px;line-height:1.3}.tgbar a b{color:var(--neon)}
 .tgbar button{flex:none;background:none;border:0;color:var(--muted);font-size:22px;line-height:1;padding:4px 6px;cursor:pointer}
 body.tgpad .wrap{padding-bottom:110px}
+.tgbar .rd{flex:1;font-size:14px;line-height:1.4}.tgbar .rd b{color:var(--neon)}.tgbar .rd a{flex:none;display:inline;font-weight:700;text-decoration:underline}
 .tag{color:var(--muted);font-size:13.5px;margin-top:1px}
 header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav a{color:var(--muted);text-decoration:none}header .nav a:hover{color:var(--fg)}
 @media(max-width:640px){header .nav{display:none}}
@@ -167,14 +168,14 @@ header .nav{margin-left:auto;display:flex;gap:14px;font-size:13.5px}header .nav 
   <footer>
     #publi · Os links levam ao Mercado Livre ou à Shopee e são links de afiliado: podemos ganhar uma comissão, sem custo extra para você.<br>
     Preços e estoque podem mudar a qualquer momento; confira na loja antes de comprar.<br>
-    <a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram @valeoclickbr.ofertas</a> · <a href="https://x.com/ValeoClickBR" rel="noopener">X @ValeoClickBR</a> · <a href="https://t.me/valeoclickofertas" rel="noopener">Telegram</a>
+    <a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram @valeoclickbr.ofertas</a> · <a href="https://x.com/ValeoClickBR" rel="noopener">X @ValeoClickBR</a> · <a href="https://br.pinterest.com/valeoclickofertas/" rel="noopener">Pinterest</a>
   </footer>
 </div>
-<div class="tgbar" id="tgbar" hidden><a href="https://t.me/valeoclickofertas" rel="noopener" id="tglink">📲 <b>Receba as promoções na hora</b><br>Entre no nosso canal grátis do Telegram</a><button type="button" id="tgx" aria-label="Fechar">×</button></div>
+<div class="tgbar" id="tgbar" hidden><div class="rd">📲 <b>Siga a gente e não perca nenhuma oferta</b><br><a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram</a> · <a href="https://x.com/ValeoClickBR" rel="noopener">X</a> · <a href="https://br.pinterest.com/valeoclickofertas/" rel="noopener">Pinterest</a></div><button type="button" id="tgx" aria-label="Fechar">×</button></div>
 <script>
 (() => {
-  try { if (!localStorage.getItem("voc_tg_x")) { document.getElementById("tgbar").hidden = false; document.body.classList.add("tgpad"); } } catch (_) { document.getElementById("tgbar").hidden = false; }
-  document.getElementById("tgx").onclick = () => { document.getElementById("tgbar").hidden = true; document.body.classList.remove("tgpad"); try { localStorage.setItem("voc_tg_x", "1"); } catch (_) {} };
+  try { if (!localStorage.getItem("voc_redes_x")) { document.getElementById("tgbar").hidden = false; document.body.classList.add("tgpad"); } } catch (_) { document.getElementById("tgbar").hidden = false; }
+  document.getElementById("tgx").onclick = () => { document.getElementById("tgbar").hidden = true; document.body.classList.remove("tgpad"); try { localStorage.setItem("voc_redes_x", "1"); } catch (_) {} };
 })();
 </script>
 <script>
