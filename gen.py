@@ -139,7 +139,7 @@ header{display:flex;align-items:center;gap:10px;padding:4px 0 10px}header a{colo
 nav.crumb{font-size:13px;color:var(--muted);margin:2px 0 6px}nav.crumb a{color:var(--muted)}
 h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:clamp(26px,6vw,40px);line-height:1.05;margin:6px 0 8px}
 .intro{color:var(--muted);max-width:680px;margin:0 0 6px}.upd{font-size:13px;color:var(--muted);margin:0 0 14px}
-.tg{display:block;margin:0 0 16px;padding:12px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--neon);color:var(--fg);text-decoration:none;font-weight:600}
+.tg{display:block;margin:0 0 16px;padding:12px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--neon);color:var(--fg);text-decoration:none;font-weight:600}.tg a{color:var(--neon)}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media(min-width:640px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(min-width:900px){.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;color:inherit;text-decoration:none;min-width:0}
@@ -193,7 +193,7 @@ def pagina(slug, h1, titulo, desc, corpo, agora, extra_head=""):
 {corpo}
 <footer>#publi · Os links levam ao Mercado Livre ou à Shopee e são links de afiliado: podemos ganhar uma comissão, sem custo extra para você.<br>
 Preços e estoque podem mudar a qualquer momento; confira na loja antes de comprar. Lista atualizada em {agora}.<br>
-<a href="/">Todas as ofertas</a> · <a href="{TG}" rel="noopener">Telegram</a> · <a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram</a> · <a href="https://x.com/ValeoClickBR" rel="noopener">X</a></footer>
+<a href="/">Todas as ofertas</a> · <a href="https://br.pinterest.com/valeoclickofertas/" rel="noopener">Pinterest</a> · <a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram</a> · <a href="https://x.com/ValeoClickBR" rel="noopener">X</a></footer>
 </div>{HIT}</body></html>
 """
 
@@ -240,7 +240,7 @@ def main():
         ld = {"@context": "https://schema.org", "@type": "ItemList", "name": h1, "numberOfItems": len(sel),
               "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": o["titulo"][:120], "url": o["link"]} for i, o in enumerate(sel)]}
         corpo = (f'<p class="intro">{ESC(intro)}</p><p class="upd">{len(sel)} ofertas · atualizado em {agora}</p>'
-                 f'<a class="tg" href="{TG}" rel="noopener">📲 Quer receber as promoções na hora? Entre no nosso canal do Telegram →</a>'
+                 f'<div class="tg">📲 Siga a gente e não perca nenhuma oferta: <a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram</a> · <a href="https://x.com/ValeoClickBR" rel="noopener">X</a> · <a href="https://br.pinterest.com/valeoclickofertas/" rel="noopener">Pinterest</a></div>'
                  f'<div class="grid">{"".join(cartao(o) for o in sel)}</div>'
                  f'<h2>Veja também</h2>{links_temas(slug, ativos)}')
         os.makedirs(os.path.join(OUT, slug), exist_ok=True)
