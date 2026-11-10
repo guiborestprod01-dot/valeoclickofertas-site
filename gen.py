@@ -193,7 +193,7 @@ def pagina(slug, h1, titulo, desc, corpo, agora, extra_head=""):
 {corpo}
 <footer>#publi · Os links levam ao Mercado Livre ou à Shopee e são links de afiliado: podemos ganhar uma comissão, sem custo extra para você.<br>
 Preços e estoque podem mudar a qualquer momento; confira na loja antes de comprar. Lista atualizada em {agora}.<br>
-<a href="/">Todas as ofertas</a> · <a href="https://br.pinterest.com/valeoclickofertas/" rel="noopener">Pinterest</a> · <a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram</a> · <a href="https://x.com/ValeoClickBR" rel="noopener">X</a></footer>
+<a href="/">Todas as ofertas</a> · <a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram @valeoclickbr.ofertas</a></footer>
 </div>{HIT}</body></html>
 """
 
@@ -240,7 +240,7 @@ def main():
         ld = {"@context": "https://schema.org", "@type": "ItemList", "name": h1, "numberOfItems": len(sel),
               "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": o["titulo"][:120], "url": o["link"]} for i, o in enumerate(sel)]}
         corpo = (f'<p class="intro">{ESC(intro)}</p><p class="upd">{len(sel)} ofertas · atualizado em {agora}</p>'
-                 f'<div class="tg">📲 Siga a gente e não perca nenhuma oferta: <a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram</a> · <a href="https://x.com/ValeoClickBR" rel="noopener">X</a> · <a href="https://br.pinterest.com/valeoclickofertas/" rel="noopener">Pinterest</a></div>'
+                 f'<div class="tg">📲 Siga a gente e não perca nenhuma oferta: <a href="https://www.instagram.com/valeoclickbr.ofertas/" rel="noopener">Instagram @valeoclickbr.ofertas</a></div>'
                  f'<div class="grid">{"".join(cartao(o) for o in sel)}</div>'
                  f'<h2>Veja também</h2>{links_temas(slug, ativos)}')
         os.makedirs(os.path.join(OUT, slug), exist_ok=True)
